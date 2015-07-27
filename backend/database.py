@@ -26,6 +26,14 @@ class Database(object):
         
         self.save()
     
+    def delete_user(self, user_id):
+        if not user_id in self.data["users"]:
+            raise Exception()
+        
+        del self.data["users"][user_id]
+        
+        self.save()
+    
     def update_user(self, user_id, street_id):
         if not user_id in self.data["users"]:
             raise Exception()

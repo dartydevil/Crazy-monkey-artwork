@@ -41,3 +41,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+*.pyc
+#TODO Add backend/database.json after it has been git add'd to make it ignore changes.
+backend/error.txt

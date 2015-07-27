@@ -20,6 +20,8 @@ def handleAction(data, action, args):
                                        float(args["radius"]))
             
             result = {"places": places}
+        elif action == "scoreboard":
+            result = {"users": data.get_scoreboard(int(args["num"]))}
         elif action == "updateuser":
             data.update_user(args["user"], args["place"])
             

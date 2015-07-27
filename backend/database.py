@@ -9,6 +9,10 @@ class Database(object):
         with open("database.json") as f:
             self.data = json.load(f)
     
+    def save(self):
+        with open("database.json", "w") as f:
+            json.dump(self.data, f)
+    
     def get_user_info(self, id_):
         return self.data["users"][id_]
     
@@ -54,6 +58,17 @@ class Database(object):
         
         self.save()
     
-    def save(self):
-        with open("database.json", "w") as f:
-            json.dump(self.data, f)
+    def get_scoreboard(self, count):
+        if count == 0:
+            return []
+        
+        users = [item for item in self.data["users"].iteritems()]
+        
+        users = sorted(users, key=lambda user: user[1]["score"])
+        
+        if len(users) >= count:
+            users = users[-count:]
+        
+        users.reverse()
+        
+        return [user[0] for user in users]

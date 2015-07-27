@@ -15,8 +15,13 @@ def main(request):
         
         return werkwrappers.Response(api.handleAction(data, action, request.args))
     
+    if request.path == "/":
+        path = "/index.html"
+    else:
+        path = request.path
+    
     try:
-        with open("../client"+request.path, "r") as f:
+        with open("../client"+path, "r") as f:
             return werkwrappers.Response(f.read())
     except IOError:
         with open("../client/404.html", "r") as f:

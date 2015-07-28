@@ -45,3 +45,6 @@ Temporary Items
 *.pyc
 backend/database.json
 backend/error.txt
+backend/crime_data.json
+backend/streets.json
+backend/data/

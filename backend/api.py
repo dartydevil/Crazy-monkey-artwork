@@ -15,7 +15,9 @@ def handleAction(data, action, args):
             data.delete_user(args["id"])
             result = {}
         elif action == "findplaces":
-            places = place.find_places(float(args["longitude"]),
+            places = place.find_places(data.streets,
+                                       data.crime_data,
+                                       float(args["longitude"]),
                                        float(args["latitude"]),
                                        float(args["radius"]))
             

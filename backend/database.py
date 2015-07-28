@@ -8,6 +8,12 @@ class Database(object):
     def __init__(self):
         with open("database.json") as f:
             self.data = json.load(f)
+        
+        with open("streets.json") as f:
+            self.streets = json.load(f)
+        
+        with open("crime_data.json") as f:
+            self.crime_data = json.load(f)
     
     def save(self):
         with open("database.json", "w") as f:
@@ -49,10 +55,10 @@ class Database(object):
                 return
         
         placedict = {"id": street_id}
-        placedict.update(place.get_street_info(street_id))
+        placedict.update(place.get_street_info(self.streets, street_id))
         
         user["places"].append(placedict)
-        user["score"] += place.get_score_for_street(street_id)
+        user["score"] += place.get_score_for_street(self.streets, street_id)
         
         achievements.update_achievements(user, placedict)
         

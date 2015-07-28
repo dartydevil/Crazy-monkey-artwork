@@ -25,7 +25,7 @@ def main(request):
             return werkwrappers.Response(f.read())
     except IOError:
         with open("../client/404.html", "r") as f:
-            return werkwrappers.Response(f.read())
+            return werkwrappers.Response(f.read(), status=404)
 
 if __name__ == '__main__':
     werkzeug.serving.run_simple('localhost', 4000, main)

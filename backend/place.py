@@ -28,13 +28,14 @@ def get_street_info_uk(streets, id_):
     return {"country": "uk",
             "label": info["label"],
             "longitude": info["longitude"],
-            "latitude": info["latitude"]}
+            "latitude": info["latitude"],
+            "num_crimes": info["num_crimes"]}
 
 def get_street_info(streets, id_):
     if id_.startswith("uk"):
         return get_street_info_uk(streets, id_)
     else:
-        return {"country": "unknown", "label": "Unknown", "longitude": 0.0, "latitude": 0.0}
+        return {"country": "unknown", "label": "Unknown", "longitude": 0.0, "latitude": 0.0, "num_crimes": 0}
 
 def find_places(streets, crime_data, longitude, latitude, radius):
     places = []
@@ -50,7 +51,8 @@ def find_places(streets, crime_data, longitude, latitude, radius):
                            "label": info["label"],
                            "longitude": info["longitude"],
                            "latitude": info["latitude"],
-                           "id": crime["street_id"]})
+                           "id": crime["street_id"],
+                           "num_crimes": info["num_crimes"]})
     
     return places
 

@@ -5,10 +5,39 @@
     <head>
         <script src="https://maps.googleapis.com/maps/api/js"></script>
         <script type="text/javascript">
+            function radians(deg)
+            {
+                return deg * (Math.PI/180)
+            }
+
+            function miles(km)
+            {
+                return km * 0.621
+            }
+
+            function distanceLatLong(lat1, long1, lat2, long2)
+            {
+                long1 = radians(long1)
+                lat1 = radians(lat1)
+                long2 = radians(long2)
+                lat2 = radians(lat2)
+                
+                //haversine formula
+                dlong = long2 - long1
+                dlat = lat2 - lat1
+                a = Math.sin(dlat/2)*Math.sin(dlat/2) +
+                    Math.cos(lat1) *
+                    Math.cos(lat2) *
+                    Math.sin(dlong/2)*Math.sin(dlong/2)
+                c = 2 * Math.asin(Math.sqrt(a))
+                return miles(c * 6367)
+            }
+
             var markers = []
             var place_ids = []
             var map
-            var radius = 1.0
+            var directionsService = new google.maps.DirectionsService()
+            var directionsDisplay
             var lastLatLong = new google.maps.LatLng(15.0, 15.0)
             
             function onMarkerClick(event)
@@ -17,58 +46,128 @@
                 {
                     if (event.latLng.equals(markers[i].getPosition()))
                     {
-                        console.log("Clicked " + place_ids[i] + "!")
+                        if (directionsDisplay != null)
+                        {
+                            directionsDisplay.setMap(null)
+                        }
+                        
+                        directionsDisplay = new google.maps.DirectionsRenderer({draggable: true})
+                        directionsDisplay.setMap(map)
+                        
+                        var request = {
+                            origin: map.getCenter(),
+                            destination: event.latLng,
+                            travelMode: google.maps.TravelMode.DRIVING
+                        }
+                        
+                        markers[i].setVisible(false)
+                        
+                        directionsService.route(request, function (response, status)
+                        {
+                            if (status == google.maps.DirectionsStatus.OK)
+                            {
+                                directionsDisplay.setDirections(response)
+                                console.log("Lets go! :D")
+                            } else
+                            {
+                                alert("D: Something went wrong! D:")
+                            }
+                        })
+                    } else
+                    {
+                        markers[i].setVisible(true)
                     }
-                }    
+                }
             }
             
-            function initializeMap()
+            function initializeMapMarkers()
             {
                 if (!(lastLatLong.equals(map.getCenter())))
                 {
-                    for (var i = 0; i < markers.length; i++)
+                    var bounds = map.getBounds()
+                    
+                    if (bounds != undefined && bounds != null)
                     {
-                        markers[i].setMap(null)
-                    }
-                    
-                    markers = []
-                    place_ids = []
-                    
-                    places = searchPlaces(map.getCenter().lng(),
-                                          map.getCenter().lat(),
-                                          radius)
-                    
-                    for (var i = 0; i < places.length; i++)
-                    {
-                        var place = places[i]
+                        var ne = bounds.getNorthEast()
+                        var sw = bounds.getSouthWest()
+                        var radius = distanceLatLong(ne.lat(), ne.lng(), sw.lat(), sw.lng()) / 2
                         
-                        var marker = new google.maps.Marker({position: new google.maps.LatLng(place.latitude,
-                                                                                              place.longitude),
-                                                             map: map,
-                                                             title: place.label});
-                        
-                        marker.addListener("click", onMarkerClick)
-                        
-                        markers.push(marker)
-                        
-                        place_ids.push(place.id)
+                        if (radius < 20)
+                        {
+                            places = searchPlaces(map.getCenter().lng(),
+                                                  map.getCenter().lat(),
+                                                  radius)
+                            
+                            var toKeep = []
+                            
+                            for (var i = 0; i < places.length; i++)
+                            {
+                                var place = places[i]
+                                
+                                if (place_ids.indexOf(place.id) == -1)
+                                {
+                                    var marker = new google.maps.Marker({position: new google.maps.LatLng(place.latitude,
+                                                                                                          place.longitude),
+                                                                         map: map,
+                                                                         title: place.num_crimes.toString()});
+                                    
+                                    marker.addListener("click", onMarkerClick)
+                                    
+                                    markers.push(marker)
+                                    
+                                    place_ids.push(place.id)
+                                }
+                                
+                                toKeep.push(place.id)
+                            }
+                            
+                            //Find the markers to remove
+                            var toRemove = []
+                            
+                            for (var i = 0; i < markers.length; i++)
+                            {
+                                if (toKeep.indexOf(place_ids[i]) == -1)
+                                {
+                                    toRemove.push(place_ids[i])
+                                }
+                            }
+                            
+                            //Remove them
+                            for (var i = 0; i < toRemove.length; i++)
+                            {
+                                var index = place_ids.indexOf(toRemove[i])
+                                
+                                markers[index].setMap(null)
+                                markers.splice(index, 1)
+                                place_ids.splice(index, 1)
+                            }
+                        } else
+                        {
+                            for (var i = 0; i < markers.length; i++)
+                            {
+                                markers[i].setMap(null)
+                            }
+                            
+                            markers = []
+                            place_ids = []
+                        }
                     }
                     
                     lastLatLong = map.getCenter()
                 }
                 
-                setTimeout("initializeMap()", 1000)
+                setTimeout("initializeMapMarkers()", 1000)
             }
             
             function init()
             {
-                var prop = {center:new google.maps.LatLng(0.0, 0.0),
-                            zoom:10,
-                            mapTypeId:google.maps.MapTypeId.ROADMAP}
+                var prop = {center: new google.maps.LatLng(54.870779, -2.021657),
+                            zoom: 7,
+                            mapTypeId: google.maps.MapTypeId.ROADMAP}
 
                 map = new google.maps.Map(document.getElementById("GoogleMap"), prop)
                 
-                initializeMap()
+                initializeMapMarkers()
             }
             
             google.maps.event.addDomListener(window, "load", init);

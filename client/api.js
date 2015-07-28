@@ -59,7 +59,7 @@ function searchPlaces(longitude, latitude, radius)
               "api?action=findplaces&longitude=" +
               longitude.toString() +
               "&latitude=" +
-              latitude.toString()) +
+              latitude.toString() +
               "&radius=" +
               radius.toString()
 

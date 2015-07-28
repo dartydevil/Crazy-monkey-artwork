@@ -5,19 +5,19 @@ import math
 def miles(km):
     return km * 0.621
 
-def distance_lat_long(lat0, long0, lat1, long1):
-    R = 6371000
-    lat = math.radians(lat0)
-    long_ = math.radians(long0)
-    dlat = math.radians(lat1 - lat0)
-    dlong = math.radians(long1 - long0)
+def distance_lat_long(lat1, long1, lat2, long2):
+    long1 = math.radians(long1)
+    lat1 = math.radians(lat1)
+    long2 = math.radians(long2)
+    lat2 = math.radians(lat2)
     
-    a = math.sin(dlat / 2.0) * math.sin(dlat / 2.0) +\
-        math.cos(lat) * math.cos(long_) *\
-        math.sin(dlong / 2.0) * math.sin(dlong / 2.0)
-    c = 2.0 * math.atan2(math.sqrt(a), math.sqrt(1.0 - a))
-    
-    return miles(R * c)
+    #haversine formula
+    dlong = long2 - long1
+    dlat = lat2 - lat1
+    a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlong/2)**2
+    c = 2 * math.asin(math.sqrt(a))
+    km = 6367 * c
+    return miles(km)
 
 def format_uk(id_):
     return "uk%s" % (id_)

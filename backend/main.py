@@ -22,10 +22,10 @@ def main(request):
     
     try:
         with open("../client"+path, "r") as f:
-            return werkwrappers.Response(f.read())
+            return werkwrappers.Response(f.read(), mimetype="text/html")
     except IOError:
         with open("../client/404.html", "r") as f:
-            return werkwrappers.Response(f.read(), status=404)
+            return werkwrappers.Response(f.read(), status=404, mimetype="text/html")
 
 if __name__ == '__main__':
     werkzeug.serving.run_simple('localhost', 4000, main)

@@ -15,11 +15,11 @@ def add_achievement(content, achievement):
     return content +\
            "<img src=\"https://raw.githubusercontent.com/dartydevil/Crazy-monkey-artwork/master/client/images/achieve%s.png\"/>\n" % (achievement)
 
-def generate_achievements_page(achievements, updown):
+def generate_achievements_page(header, achievements, updown):
     content = """<!DOCTYPE html>
 <html style="height:100%;margin:0px 0px">
     <meta charset="UTF-8">
-"""
+""" + header
     
     if "1000" in achievements:
         content = add_achievement(content, "1000")

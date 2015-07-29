@@ -1,15 +1,3 @@
-.mur {
-	background-image:url("http://www.calebwilde.com/wp-content/uploads/2013/07/Murder.jpg");
-	position: middle;
-	font-size: 40px;
-	font-color: Red;
-	font-position: middle;
-}
-
-.pea {
-	background-image:url(http://images5.fanpop.com/image/photos/25200000/Peace-Dove-peace-and-love-revolution-club-25246076-457-500.jpg);
-	position: middle;
-	font-size: 40px;
-	font-color: Gold;
-
+table, th, td {
+    border: 1px solid black;
 }

@@ -1,31 +1,45 @@
 <!DOCTYPE html>
 <html>
- <head>
- 	<link rel="stylesheet" href="welcome.css">
- </head>
- <body>
-  <h1> Scoreboard</h1>
-  <table style="width:100%">
-  <tr>
-    <td>Position</td>
-    <td>Name</td> 
-    <td>Score</td>
-  </tr>
-  <tr>
-    <td>#1</td>
-    <td></td> 
-    <td></td>
-  </tr>
-    <tr>
-    <td>#2</td>
-    <td></td> 
-    <td></td>
-  </tr>
-    <tr>
-    <td>#3</td>
-    <td></td> 
-    <td></td>
-  </tr>
-</table>
- </body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Your Achievements</title>
+    <script type="text/javascript"> <!-- I should commit seppuku for this D: -->
+      var DOMAIN = "https://ook.foo/"
+      function getJSONP(url, success) {
+          /* Stolen from SO: http://stackoverflow.com/a/2499647/1235740 */
+          var ud = '_' + +new Date,
+              script = document.createElement('script'),
+              head = document.getElementsByTagName('head')[0]
+                    || document.documentElement;
+
+          window[ud] = function(data) {
+              head.removeChild(script);
+              success && success(data);
+          };
+          script.src = url.replace('callback=?', 'callback=' + ud);
+          head.appendChild(script);
+      }
+      function inject_element(element, parent, attrib)
+      {
+        var tmp = document.createElement(element);
+        for (var v in attrib) {
+          tmp.setAttribute(v, attrib[v]);
+        }
+        var p = document.getElementById(parent);
+        p.insertAfter(tmp, p.firstChild);
+      }
+      function inject_text(text, parent)
+      {
+        var p = document.getElementById(parent);
+        p.insertBefore(document.createTextNode(text), p.lastChild);
+      }
+
+      // getJSONP(DOMAIN + "?action=scoreboard&num=50",
+      //          function (d) {
+                   injectelement("div", "body", {id:"center"});
+                 // }
+    </script>
+  </head>
+  <body>
+  </body>
 </html>

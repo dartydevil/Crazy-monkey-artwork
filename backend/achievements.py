@@ -17,7 +17,7 @@ def add_achievement(content, achievement):
 
 def generate_achievements_page(header, achievements, updown):
     content = """<!DOCTYPE html>
-<html style="height:100%;margin:0px 0px;text-align:center">
+<html style="height:100%;margin:0px 0px;text-align:center;">
     <meta charset="UTF-8">
 """ + header
     

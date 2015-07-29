@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from flask import Flask 
-import werkzeug.wrappers as werkwrappers
-import werkzeug.serving
-
 
 import api
 import database

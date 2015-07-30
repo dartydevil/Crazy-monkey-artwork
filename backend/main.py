@@ -117,6 +117,10 @@ def main(request):
                                               userinfo["last_name"],
                                               request.args["user"])
         
+        content += """<h1>Score</h1>"""
+        
+        content += "%d" % (userinfo["score"])
+        
         content += """<h1>Achievements</h1></div>"""
         
         content += achievements.generate_achievements_html(userinfo["achievements"],

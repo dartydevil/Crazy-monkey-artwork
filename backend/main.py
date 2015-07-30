@@ -9,7 +9,7 @@ import achievements
 
 header = """
 <div style="text-align:center;">
-    <a id="achievementsLink" href="">Triumphs</a>
+    <a id="profileLink" href="">Profile</a>
     <a id="scoreboardLink" href="scoreboard.html?count=10">Leaders</a>
     <a id="mapLink" href="">Go</a>
     <button id="loginlogout"></button>
@@ -21,18 +21,18 @@ header = """
 <script type="text/javascript">
     function updateLinks()
     {
-        var achievements = document.getElementById("achievementsLink")
+        var profile = document.getElementById("profileLink")
         var map = document.getElementById("mapLink")
         
         var user = localStorage["userid"]
         
         if (user == undefined || user == null)
         {
-            achievements.href = base
+            profile.href = base
             map.href = base
         } else
         {
-            achievements.href = base + "achievements.html?user=" + user
+            profile.href = base + "profile.html?user=" + user
             map.href = base + "map.html"
         }
     }
@@ -96,7 +96,7 @@ def main(request):
         
         return werkwrappers.Response(api.handleAction(data, action, request.args))
     
-    if path == "/achievements.html":
+    if path == "/profile.html":
         userinfo = data.get_user_info(request.args["user"])
         
         if request.args.get("updown", "False") == "True":
@@ -104,9 +104,25 @@ def main(request):
         else:
             updown = False
         
-        content = achievements.generate_achievements_page(header,
-                                                          userinfo["achievements"],
-                                                          updown)
+        content = """<!DOCTYPE html>
+<html style="height:100%;">
+    <meta charset="UTF-8">
+"""
+        
+        content += header
+        
+        content += "<div style=\"text-align:center;\">\n<h1>Name</h1>"
+        
+        content += """%s %s<br/>%s<br/>""" % (userinfo["first_name"],
+                                              userinfo["last_name"],
+                                              request.args["user"])
+        
+        content += """<h1>Achievements</h1></div>"""
+        
+        content += achievements.generate_achievements_html(userinfo["achievements"],
+                                                           updown)
+        
+        content += "</html>"
         
         return werkwrappers.Response(content, mimetype="text/html")
     elif path == "/scoreboard.html":

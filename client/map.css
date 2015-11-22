@@ -2,3 +2,23 @@
 	position: top-right;
 	border-image-width: 400px;
 }
+
+.menu{
+    margin: 0;
+    padding: 0;
+    text-align: middle;
+    overflow: hidden;
+    position: center;
+}
+
+.menu a {
+	display: block;
+    width: 100px;
+    background-color: #E61717;
+}
+
+.menu li {
+   float: left;
+   list-style-type: none;
+   color: #000000;
+}
